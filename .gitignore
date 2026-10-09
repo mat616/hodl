@@ -1,0 +1,14 @@
+.anchor
+.DS_Store
+target
+**/*.rs.bk
+test-ledger
+.yarn
+node_modules
+wallet.json
+keeper.json
+.tools
+target/deploy
+.env
+web/dist
+*.tsbuildinfo

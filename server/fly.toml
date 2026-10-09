@@ -1,0 +1,24 @@
+app = "hodl"
+primary_region = "iad"
+
+[build]
+  dockerfile = "Dockerfile"
+
+[env]
+  PORT = "8787"
+  ORACLE_MODE = "switchboard"
+  KEEPER_SEND = "1"
+  KEEPER_INTERVAL_MS = "20000"
+  KEEPER_DEPOSIT_MINUTES = "1408"
+  RPC_URL = "https://api.mainnet-beta.solana.com"
+
+[http_service]
+  internal_port = 8787
+  force_https = true
+  auto_stop_machines = "off"
+  auto_start_machines = true
+  min_machines_running = 1
+
+[[vm]]
+  size = "shared-cpu-1x"
+  memory = "512mb"

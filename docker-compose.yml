@@ -1,0 +1,38 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_USER: dev
+      POSTGRES_PASSWORD: dev
+      POSTGRES_DB: dev
+    ports:
+      - "5433:5432"
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dev -d dev"]
+      interval: 3s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: ./server
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgres://dev:dev@db:5432/dev
+      RPC_URL: ${RPC_URL:-https://solana-rpc.publicnode.com}
+      PORT: "8787"
+      KEEPER_SEND: ${KEEPER_SEND:-1}
+      ORACLE_MODE: ${ORACLE_MODE:-switchboard}
+      KEEPER_INTERVAL_MS: ${KEEPER_INTERVAL_MS:-20000}
+      KEEPER_DEPOSIT_MINUTES: ${KEEPER_DEPOSIT_MINUTES:-10}
+      KEEPER_KEY: /keys/keeper.json
+    ports:
+      - "8787:8787"
+    volumes:
+      - ${KEEPER_KEY_HOST:-./keeper.json}:/keys/keeper.json:ro
+
+volumes:
+  pg_data:
